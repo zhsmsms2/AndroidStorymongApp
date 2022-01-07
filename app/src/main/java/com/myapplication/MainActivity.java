@@ -53,17 +53,21 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
+                int i =0;
                 str = editText.getText().toString();
-                for (int i = 0; i < memberList.stream().count(); i++) {
+
+                while (i<memberList.stream().count()) {
                     if (memberList.get(i).getMb_email().equals(str)) {
                         Intent intent = new Intent(MainActivity.this, MemberInfo.class);
                         intent.putExtra("str", gson.toJson(memberList.get(i)));
                         startActivity(intent);
+                        break;
+                    }else if(i == memberList.stream().count() - 1 && !memberList.get(i).getMb_email().equals(str)) {
+                        Intent intent = new Intent(MainActivity.this, MemberInfo.class);
+                        startActivity(intent);
                     }
+                    i++;
                 }
-                Intent intent = new Intent(MainActivity.this, MemberInfo.class);
-                intent.putExtra("str", "검색결과가 없습니다.");
-                startActivity(intent);
             }
         });
     }
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "doInBackground: " + memberList.toString());
                 Log.d(TAG, "doInBackground: " + memberList.stream().count());
                 Log.d(TAG, "doInBackground: " + memberList.get(1).getMb_email());
+                Log.d(TAG, "doInBackground: " + gson.toJson(memberList.get(1)));
 
 
             } catch (IOException e) {

@@ -23,6 +23,11 @@ public class MemberInfo extends AppCompatActivity {
         String str = intent.getStringExtra("str");
         Member member = gson.fromJson(str, Member.class);
 
-        textView.setText(member.getMb_password());
+        if(str != null){
+            textView.setText(member.getMb_password());
+        }else {
+            textView.setText("검색결과 없음!");
+        }
+
     }
 }
