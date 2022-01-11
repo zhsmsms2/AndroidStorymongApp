@@ -1,8 +1,11 @@
 package com.myapplication;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.time.LocalDateTime;
 
-public class Member {
+public class Member implements Parcelable {
     private int mb_id;
     private String mb_email;
     private String mb_password;
@@ -44,6 +47,40 @@ public class Member {
         this.old_mb_pic_file = old_mb_pic_file;
         this.default_pic = default_pic;
     }
+
+    protected Member(Parcel in) {
+        mb_id = in.readInt();
+        mb_email = in.readString();
+        mb_password = in.readString();
+        mb_phone = in.readString();
+        mb_type = in.readString();
+        mb_gender = in.readString();
+        mb_name = in.readString();
+        mb_birthdt = in.readString();
+        mb_status = in.readString();
+        mb_marketing = in.readString();
+        mb_auth = in.readString();
+        mb_dream = in.readInt();
+        mb_point = in.readInt();
+        author_reg = in.readString();
+        reg_dt = in.readString();
+        mod_dt = in.readString();
+        mb_pic = in.readString();
+        old_mb_pic_file = in.readString();
+        default_pic = in.readString();
+    }
+
+    public static final Creator<Member> CREATOR = new Creator<Member>() {
+        @Override
+        public Member createFromParcel(Parcel in) {
+            return new Member(in);
+        }
+
+        @Override
+        public Member[] newArray(int size) {
+            return new Member[size];
+        }
+    };
 
     public int getMb_id() {
         return mb_id;
@@ -221,4 +258,33 @@ public class Member {
                 ", default_pic='" + default_pic + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mb_id);
+        parcel.writeString(mb_email);
+        parcel.writeString(mb_password);
+        parcel.writeString(mb_phone);
+        parcel.writeString(mb_type);
+        parcel.writeString(mb_gender);
+        parcel.writeString(mb_name);
+        parcel.writeString(mb_birthdt);
+        parcel.writeString(mb_status);
+        parcel.writeString(mb_marketing);
+        parcel.writeString(mb_auth);
+        parcel.writeInt(mb_dream);
+        parcel.writeInt(mb_point);
+        parcel.writeString(author_reg);
+        parcel.writeString(reg_dt);
+        parcel.writeString(mod_dt);
+        parcel.writeString(mb_pic);
+        parcel.writeString(old_mb_pic_file);
+        parcel.writeString(default_pic);
+    }
+
 }

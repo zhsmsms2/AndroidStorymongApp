@@ -8,22 +8,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,30 +38,29 @@ public class MainActivity extends AppCompatActivity {
         new HttpAsyncTask().execute("Http://192.168.0.56:8080/member");
 
         Button btn = findViewById(R.id.btn);
-        TextView textView = findViewById(R.id.textView);
         EditText editText = findViewById(R.id.editText);
-        Gson gson = new GsonBuilder().create();
-        btn.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View view) {
-                int i =0;
-                str = editText.getText().toString();
+        btn.setOnClickListener(view -> {
+            int i =0;
+            str = editText.getText().toString();
+            ArrayList<Member> mList = new ArrayList<>();
 
-                while (i<memberList.stream().count()) {
-                    if (memberList.get(i).getMb_email().equals(str)) {
-                        Intent intent = new Intent(MainActivity.this, MemberInfo.class);
-                        intent.putExtra("str", gson.toJson(memberList.get(i)));
-                        startActivity(intent);
-                        break;
-                    }else if(i == memberList.stream().count() - 1 && !memberList.get(i).getMb_email().equals(str)) {
-                        Intent intent = new Intent(MainActivity.this, MemberInfo.class);
-                        startActivity(intent);
-                    }
-                    i++;
+            while (i<memberList.size()) {
+                if (memberList.get(i).getMb_email().contains(str)) {
+                    mList.add(memberList.get(i));
                 }
+                i++;
+            }
+            if (mList.size() > 0) {
+                Intent intent = new Intent(MainActivity.this, MemberInfo.class);
+                intent.putExtra("mList", mList);
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), "검색결과가 없습니다", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
     }
     private static class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -94,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 memberList = gson.fromJson(response.body().string(), listType);
 
                 Log.d(TAG, "doInBackground: " + memberList.toString());
-                Log.d(TAG, "doInBackground: " + memberList.stream().count());
+                Log.d(TAG, "doInBackground: " + memberList.size());
                 Log.d(TAG, "doInBackground: " + memberList.get(1).getMb_email());
                 Log.d(TAG, "doInBackground: " + gson.toJson(memberList.get(1)));
 
